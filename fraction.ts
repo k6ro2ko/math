@@ -1,39 +1,42 @@
 import { roundTo } from "./utils.ts";
+import { gcdEuclid } from "./gcd.ts";
 
 export class Fraction {
   constructor(
-    private numerator: number,
-    private denominator: number,
-  ) {}
+    public numerator: number,
+    public denominator: number,
+  ) {
+    this.cancel(); 
+  }
+
+  public cancel() {
+    const gcd = gcdEuclid(this.numerator, this.denominator);
+    this.numerator /= gcd;
+    this.denominator /= gcd;
+  }
 
   public add(other: Fraction) {
-    const newNumerator =
-      this.numerator * other.denominator + other.numerator * this.denominator;
-    const newDenominator = this.denominator * other.denominator;
-    this.numerator = newNumerator;
-    this.denominator = newDenominator;
+    this.numerator = this.numerator * other.denominator + other.numerator * this.denominator;
+    this.denominator = this.denominator * other.denominator;
+    this.cancel();
   }
 
   public subtract(other: Fraction) {
-    const newNumerator =
-      this.numerator * other.denominator - other.numerator * this.denominator;
-    const newDenominator = this.denominator * other.denominator;
-    this.numerator = newNumerator;
-    this.denominator = newDenominator;
+    this.numerator = this.numerator * other.denominator - other.numerator * this.denominator;
+    this.denominator = this.denominator * other.denominator;
+    this.cancel();
   }
 
   public multiply(other: Fraction) {
-    const newNumerator = this.numerator * other.numerator;
-    const newDenominator = this.denominator * other.denominator;
-    this.numerator = newNumerator;
-    this.denominator = newDenominator;
+    this.numerator = this.numerator * other.numerator;
+    this.denominator = this.denominator * other.denominator;
+    this.cancel();
   }
 
   public divide(other: Fraction) {
-    const newNumerator = this.numerator * other.denominator;
-    const newDenominator = this.denominator * other.numerator;
-    this.numerator = newNumerator;
-    this.denominator = newDenominator;
+    this.numerator = this.numerator * other.denominator;
+    this.denominator = this.denominator * other.numerator;
+    this.cancel();
   }
 
   public toFloat(precision: number): number {
